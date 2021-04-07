@@ -2,7 +2,7 @@
 
 This is a guide for getting started with Kubernetes locally on MacOS!
 
-It contains nothing groundbreaking, it is basically a summary of the official tutorials from [Flux](https://toolkit.fluxcd.io/get-started/) and [kind](https://kind.sigs.k8s.io/docs/user/quick-start/).
+The guide contains nothing groundbreaking, it is basically a summary of the official tutorials from [Flux](https://toolkit.fluxcd.io/get-started/) and [kind](https://kind.sigs.k8s.io/docs/user/quick-start/) with some additional clarifications from me.
 
 ## Prerequisites
 
@@ -76,8 +76,17 @@ When the synchronization finishes you can check that podinfo has been deployed o
 From this moment forward, any changes made to the podinfo Kubernetes manifest in the master branch will be synchronised with your cluster.
 
 ## Access the service
+At this point you might want to try out the actual service we now have up and running.
 
-Access the podinfo service at ????
+First of all we need to find out the name of some pod which we then can access. List all currently running pods with:
+
+    kubectl get pods
+
+Grab the name of any of the running podinfo pods (there should be two of them) and run the following command to forward port 8080 on your computer to port 9898 of the pod, which is were podinfo is listening for incoming traffic.
+
+    kubectl port-forward <podname> 8080:9898
+
+Access the podinfo service at http://localhost:8080/
 
 ## Advanced
 
