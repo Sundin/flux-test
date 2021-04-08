@@ -77,6 +77,8 @@ When the synchronization finishes you can check that podinfo has been deployed o
 
     watch kubectl -n default get deployments,services
 
+_(Note: if you don't have watch installed, you can run the same commands without prefixing watch.)_
+
 From this moment forward, any changes made to the podinfo Kubernetes manifest in the master branch will be synchronised with your cluster.
 
 ## Access the service
