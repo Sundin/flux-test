@@ -15,6 +15,7 @@ First we will install some tools. [Kubectl](https://kubernetes.io/docs/reference
     brew install watch
 
 ## Create a local Kubernetes cluster
+
 We will use kind to set up a Kubernetes locally on your own computer.
 
 Create a [Github personal access token](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token) with all `repo` permissions enabled.
@@ -46,7 +47,7 @@ Run the following command to create a repository that will contain the configura
 
 Clone the repo the newly created repository.
 
-We will now deploy a pod called [podinfo](github.com/stefanprodan/podinfo), which is a tiny sample web application made with Go, to our cluster. In order to do this, we will create a *GitRepository manifest* (a file that defines that we will use a git repository as source for our pod) pointing to the podinfo repository's master branch. Other example of source types than git are [Helm](https://helm.sh/) repositories or buckets.
+We will now deploy a pod called [podinfo](https://github.com/stefanprodan/podinfo), which is a tiny sample web application made with Go, to our cluster. In order to do this, we will create a _GitRepository manifest_ (a file that defines that we will use a git repository as source for our pod) pointing to the podinfo repository's master branch. Other example of source types than git are [Helm](https://helm.sh/) repositories or buckets.
 
     flux create source git podinfo \
         --url=https://github.com/stefanprodan/podinfo \
@@ -54,8 +55,7 @@ We will now deploy a pod called [podinfo](github.com/stefanprodan/podinfo), whic
         --interval=30s \
         --export > ./clusters/my-cluster/podinfo-source.yaml
 
-
-We will also create a *Flux Kustomization manifest* for the podinfo pod. The Kustomization API defines a pipeline for fetching, decrypting, building, validating and applying Kubernetes manifests, so this will configure Flux to build and apply the [kustomize directory](https://github.com/stefanprodan/podinfo/tree/master/kustomize) located in the podinfo repository.
+We will also create a _Flux Kustomization manifest_ for the podinfo pod. The Kustomization API defines a pipeline for fetching, decrypting, building, validating and applying Kubernetes manifests, so this will configure Flux to build and apply the [kustomize directory](https://github.com/stefanprodan/podinfo/tree/master/kustomize) located in the podinfo repository.
 
     flux create kustomization podinfo \
         --source=podinfo \
@@ -65,7 +65,7 @@ We will also create a *Flux Kustomization manifest* for the podinfo pod. The Kus
         --interval=5m \
         --export > ./clusters/my-cluster/podinfo-kustomization.yaml
 
-Watch Flux sync the application (this process is technically known as *[reconciliation](https://toolkit.fluxcd.io/core-concepts/#reconciliation)*):
+Watch Flux sync the application (this process is technically known as _[reconciliation](https://toolkit.fluxcd.io/core-concepts/#reconciliation)_):
 
     watch flux get kustomizations
 
@@ -76,6 +76,7 @@ When the synchronization finishes you can check that podinfo has been deployed o
 From this moment forward, any changes made to the podinfo Kubernetes manifest in the master branch will be synchronised with your cluster.
 
 ## Access the service
+
 At this point you might want to try out the actual service we now have up and running.
 
 First of all we need to find out the name of some pod which we then can access. List all currently running pods with:
