@@ -2,11 +2,10 @@
 apiVersion: source.toolkit.fluxcd.io/v1beta1
 kind: GitRepository
 metadata:
-  name: podinfo
+  name: weather-api
   namespace: flux-system
 spec:
   interval: 30s
   ref:
     branch: master
   url: https://github.com/Sundin/weather-api
-
