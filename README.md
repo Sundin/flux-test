@@ -97,13 +97,38 @@ Access the podinfo service at http://localhost:8080/
 
 ## Ingress
 
+Delete the existing cluster:
+
+    kind delete cluster
+
 Create a kind cluster with `extraPortMappings` to allow the local host to make requests to the Ingress controller over ports 80/443 and `node-labels` to only allow the ingress controller to run on a specific node(s) matching the label selector.
 
     kind create cluster --config=kind/cluster-config.yaml
 
-Add NGINX ingress controller:
+Add an NGINX Ingress Controller:
 
     kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/static/provider/kind/deploy.yaml
+
+Tell flux to start synching to your new cluster instead (this is the same as the initial bootstrapping command we did, but without creating a new repository):
+
+    flux install
+
+    flux create source git app \
+        --url=https://github.com/$GITHUB_USER/flux-test \
+        --branch=master \
+        --interval=1m
+
+    flux create kustomization app \
+        --source=GitRepository/app \
+        --path="./overlays/prod" \
+        --prune=true \
+        --interval=10m
+
+    flux create kustomization app \
+        --source=app \
+        --path="./clusters/my-cluster" \
+        --prune=true \
+        --interval=10m
 
 ## Advanced
 
