@@ -65,13 +65,17 @@ We will also create a _Flux Kustomization manifest_ for the podinfo pod. The Kus
         --interval=5m \
         --export > ./clusters/my-cluster/podinfo-kustomization.yaml
 
+Push to apply these changes:
+
+    git push
+
 Watch Flux sync the application (this process is technically known as _[reconciliation](https://toolkit.fluxcd.io/core-concepts/#reconciliation)_):
 
     watch flux get kustomizations
 
 When the synchronization finishes you can check that podinfo has been deployed on your cluster:
 
-    kubectl -n default get deployments,services
+    watch kubectl -n default get deployments,services
 
 From this moment forward, any changes made to the podinfo Kubernetes manifest in the master branch will be synchronised with your cluster.
 
