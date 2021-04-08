@@ -97,6 +97,10 @@ Access the podinfo service at http://localhost:8080/
 
 ## Ingress
 
+By using the port-forward solution above, we will only get direct access to one of the two pods. A more robust solution is to use an Ingress, but this will require some more work. Step one is to set up a brand new cluster with an Ingress Controller installed.
+
+### Recreate cluster
+
 Delete the existing cluster:
 
     kind delete cluster
@@ -105,30 +109,55 @@ Create a kind cluster with `extraPortMappings` to allow the local host to make r
 
     kind create cluster --config=kind/cluster-config.yaml
 
-Add an NGINX Ingress Controller:
+Add an NGINX Ingress Controller to the cluster:
 
     kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/static/provider/kind/deploy.yaml
 
-Tell flux to start synching to your new cluster instead (this is the same as the initial bootstrapping command we did, but without creating a new repository):
+### Synch Flux to new cluster
+
+Tell Flux to start synching to your new cluster instead (this is the same as the initial bootstrapping command we did, but without creating a new repository):
 
     flux install
 
-    flux create source git app \
+    flux create source git flux-system \
         --url=https://github.com/$GITHUB_USER/flux-test \
         --branch=master \
         --interval=1m
 
-    flux create kustomization app \
-        --source=GitRepository/app \
-        --path="./overlays/prod" \
-        --prune=true \
-        --interval=10m
-
-    flux create kustomization app \
-        --source=app \
+    flux create kustomization flux-system \
+        --source=flux-system \
         --path="./clusters/my-cluster" \
         --prune=true \
         --interval=10m
+
+### Add ingress to pod
+
+Now we need to clone the podinfo repo (or create a repo with a pod of our own). Change the GitRepository manifest to point to the new repo instead.
+
+In the `kustomize` folder of the cloned repo, add a file called `ingress.yaml` with the following content:
+
+    apiVersion: networking.k8s.io/v1beta1
+    kind: Ingress
+    metadata:
+        name: example-ingress
+    spec:
+    rules:
+        - http:
+            paths:
+            - path: /
+                backend:
+                serviceName: podinfo
+                servicePort: 9898
+
+And add this line to the bottom of `kustomize/kustomization.yaml`:
+
+      - ingress.yaml
+
+Push the changes.
+
+    git push
+
+Your service is now available at http://localhost:80/
 
 ## Advanced
 
