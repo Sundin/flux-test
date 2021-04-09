@@ -65,9 +65,7 @@ We will also create a _Flux Kustomization manifest_ for the podinfo pod. The Kus
         --interval=5m \
         --export > ./clusters/my-cluster/podinfo-kustomization.yaml
 
-Push to apply these changes:
-
-    git push
+Commit and push the changes.
 
 Watch Flux sync the application (this process is technically known as _[reconciliation](https://toolkit.fluxcd.io/core-concepts/#reconciliation)_):
 
