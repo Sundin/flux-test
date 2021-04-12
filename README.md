@@ -12,7 +12,11 @@ First we will install some tools. [Kubectl](https://kubernetes.io/docs/reference
     brew install kind
     brew install kubectl
     brew install fluxcd/tap/flux
+
+Optional tools. `watch` is used to watch commands and [stern](https://github.com/wercker/stern) is used for easily tail pod logs.
+
     brew install watch
+    brew install stern
 
 ## Create a local Kubernetes cluster
 
@@ -78,6 +82,12 @@ When the synchronization finishes you can check that podinfo has been deployed o
 _(Note: if you don't have watch installed, you can run the same commands without prefixing watch.)_
 
 From this moment forward, any changes made to the podinfo Kubernetes manifest in the master branch will be synchronised with your cluster.
+
+To follow logs in realtime for your pods, run:
+
+    stern "podinfo-.*"
+
+Alternatively, you can run `kubectl get pods` to figure out the name of one of your pods and then do `kubectl logs ${POD_NAME} ${CONTAINER_NAME}`.
 
 ## Access the service
 
