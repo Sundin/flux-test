@@ -162,3 +162,5 @@ Your service is now available at http://localhost:80/
 If a Kubernetes manifest is removed from the podinfo repository, Flux will remove it from your cluster. If you delete a Kustomization from the flux-test repository, Flux will remove all Kubernetes objects that were previously applied from that Kustomization.
 
 If you alter the podinfo deployment using `kubectl edit`, the changes will be reverted to match the state described in Git. When dealing with an incident, you can pause the reconciliation of a kustomization with `flux suspend kustomization <name>`. Once the debugging session is over, you can re-enable the reconciliation with `flux resume kustomization <name>`.
+
+Since Kind eats up quite some CPU resources, it might make sense in pausing it when you don't need it. To pause the cluster, first run `docker ps` to get the container ID of your cluster. Then run `docker pause <containerId>`. To resume, run `docker unpause <containerId>` (who came up with that command name?!).
